@@ -3,9 +3,8 @@
     <div class="form-group form-group-lg panel panel-default">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox" v-model="editable">드래그 앤 드롭</label>
+          <label><input type="checkbox" v-model="editable">드래그 앤 드롭 허용</label>
         </div>
-        <!-- <button type="button" class="btn btn-default" @click="orderList">id에 따라 정렬</button> -->
       </div>
     </div>
 
@@ -16,7 +15,7 @@
         <div>
           <draggable class="list-group" tag="ul" v-model="fruitList" v-bind="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
             <transition-group type="transition" :name="'flip-list'">
-              <li class="list-group-item" v-for="element in fruitList" :key="element.order">
+              <li class="list-group-item" v-for="(element, idx) in fruitList" :key="idx">
                 <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
                 {{element.order}}. {{element.name}}
               </li>
@@ -29,7 +28,7 @@
         <div>
           <draggable class="list-group" tag="ul" v-model="grainList" v-bind="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
             <transition-group type="transition" :name="'flip-list'">
-              <li class="list-group-item" v-for="element in grainList" :key="element.order">
+              <li class="list-group-item" v-for="(element, idx) in grainList" :key="idx">
                 <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
                 {{element.order}}. {{element.name}}
               </li>
@@ -41,7 +40,7 @@
 
     <h3>식판</h3>
     <div class="tray-layout">
-      <draggable element="span" v-model="trayList" v-bind="dragOptions" :move="onMove">
+      <draggable tag="span" v-model="trayList" v-bind="dragOptions" :move="onMove">
         <transition-group name="no" class="list-group" tag="ul">
           <li class="list-group-item" v-for="element in trayList" :key="element.order">
             <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
@@ -51,12 +50,8 @@
       </draggable>
     </div>
 
-    <!-- <div class="list-group col-md-3">
-      <pre>{{listString}}</pre>
-    </div>
-    <div class="list-group col-md-3">
-      <pre>{{list2String}}</pre>
-    </div> -->
+    <button type="button" class="btn btn-default" @click="orderList">id에 따라 정렬</button>
+    <button type="button" class="btn btn-default" @click="resetList">초기화</button>
   </div>
 </template>
 
@@ -93,16 +88,26 @@ export default {
   methods: {
     setListOrder() {
       this.fruitList = this.fruitList.map((fruit, index)=>{
-        return {...fruit, order: index + 1, fixed: false}
+        return {...fruit, kinds: 'fruit', order: index + 1, fixed: false}
       })
       this.grainList = this.grainList.map((grain, index)=>{
-        return {...grain, order: index + 1, fixed: false}
+        return {...grain, kinds: 'grain', order: index + 1, fixed: false}
       })
     },
     orderList() {
-      this.list = this.list.sort((one, two) => {
+      this.trayList = this.trayList.sort((one, two) => {
         return one.order - two.order;
       });
+    },
+    resetList() {
+      this.trayList.map((list)=>{
+        if (list.kinds === 'fruit') {
+          this.fruitList.push(list)
+        } else if (list.kinds === 'grain') {
+          this.grainList.push(list)
+        }
+      })
+      this.trayList = [];
     },
     onMove({ relatedContext, draggedContext }) {
       const relatedElement = relatedContext.element;
@@ -121,12 +126,6 @@ export default {
         ghostClass: "ghost"
       };
     },
-    listString() {
-      return JSON.stringify(this.list, null, 2);
-    },
-    list2String() {
-      return JSON.stringify(this.list2, null, 2);
-    }
   },
   watch: {
     isDragging(newValue) {
