@@ -1,17 +1,13 @@
 <template>
   <div id="app">
-    <DraggablePractice />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import DraggablePractice from './components/DraggablePractice.vue'
 
 export default {
   name: 'App',
-  components: {
-    DraggablePractice
-  }
 }
 </script>
 
