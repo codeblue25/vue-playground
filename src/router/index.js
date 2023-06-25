@@ -19,6 +19,10 @@ const router =  new VueRouter({
     {
       path: '/grain',
       component: () => import('../components/GrainChoicePage.vue')
+    },
+    {
+      path: '/map',
+      component: () => import('../components/MapPage.vue')
     }
     ]
 });

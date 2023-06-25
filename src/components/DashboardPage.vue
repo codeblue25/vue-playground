@@ -2,6 +2,7 @@
   <div>
     <button @click="onChoiceFruit">과일</button>
     <button @click="onChoiceGrain">곡식</button>
+    <button @click="onChoiceMap">지도</button>
   </div>
 </template>
 
@@ -13,6 +14,9 @@ export default {
     },
     onChoiceGrain() {
       this.$router.push('/grain')
+    },
+    onChoiceMap() {
+      this.$router.push('/map')
     }
   }
 }
