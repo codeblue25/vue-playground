@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
+    <VisionPractice />
   </div>
 </template>
 
 <script>
-
+import VisionPractice from './components/VisionPractice.vue';
 export default {
   name: 'App',
+  components: {
+    VisionPractice
+  }
 }
 </script>
 
